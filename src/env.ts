@@ -23,5 +23,6 @@ export function getEnv(): Record<string, string> {
     PROJECT_ID: scriptProperties.getProperty('PROJECT_ID') || '',
     RECIPIENT_EMAIL: scriptProperties.getProperty('RECIPIENT_EMAIL') || '',
     WEBHOOK_SECRET: scriptProperties.getProperty('WEBHOOK_SECRET') || '',
+    SHEET_ID: scriptProperties.getProperty('SHEET_ID') || '',
   };
 }

@@ -1,4 +1,4 @@
-import { sendEmail } from './utils/email';
+import { updateStatus } from './utils/form';
 import { createIntakeIssue, isValidWebhookSignature } from './utils/plane';
 
 /**
@@ -36,6 +36,7 @@ function onFormSubmit(e: GoogleAppsScript.Events.FormsOnFormSubmit) {
     },
     {}
   );
+  updateStatus(payload['Title'] as string, 'Reported');
 
   Logger.log('Form response payload:' + JSON.stringify(payload));
 
@@ -72,6 +73,10 @@ function doPost(e: GoogleAppsScript.Events.DoPost) {
     }
 
     Logger.log('Webhook received: ' + JSON.stringify(data));
+
+    if (data.event === 'issue' && data.action === 'updated') {
+      updateStatus(data.data.name, data.data.state.name);
+    }
 
     return ContentService.createTextOutput(
       JSON.stringify({ message: 'Webhook received' })
