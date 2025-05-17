@@ -21,5 +21,6 @@ export function getEnv(): Record<string, string> {
     API_KEY: scriptProperties.getProperty('API_KEY') || '',
     WORKSPACE_SLUG: scriptProperties.getProperty('WORKSPACE_SLUG') || '',
     PROJECT_ID: scriptProperties.getProperty('PROJECT_ID') || '',
+    RECIPIENT_EMAIL: scriptProperties.getProperty('RECIPIENT_EMAIL') || '',
   };
 }
