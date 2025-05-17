@@ -50,3 +50,9 @@ export function createIntakeIssue(payload: {
     throw new Error('Error creating issue: ' + error);
   }
 }
+
+export function isValidWebhookSignature(token: string): boolean {
+  const { WEBHOOK_SECRET } = getEnv();
+
+  return token === WEBHOOK_SECRET;
+}

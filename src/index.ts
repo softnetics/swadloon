@@ -1,4 +1,5 @@
-import { createIntakeIssue } from './utils/plane';
+import { sendEmail } from './utils/email';
+import { createIntakeIssue, isValidWebhookSignature } from './utils/plane';
 
 /**
  * Copyright 2023 Google LLC
@@ -40,4 +41,45 @@ function onFormSubmit(e: GoogleAppsScript.Events.FormsOnFormSubmit) {
 
   const response = createIntakeIssue(payload);
   Logger.log('Response from Plane API: ' + response);
+}
+
+function doGet(e: GoogleAppsScript.Events.DoGet) {
+  try {
+    const params = JSON.stringify(e);
+    return ContentService.createTextOutput('Swadloon is awesome!').setMimeType(
+      ContentService.MimeType.JSON
+    );
+  } catch (error) {
+    Logger.log('Error: ' + error);
+    return ContentService.createTextOutput(
+      JSON.stringify({ error: 'Error: ' + error })
+    ).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function doPost(e: GoogleAppsScript.Events.DoPost) {
+  try {
+    const payload = e.postData.contents;
+    const data = JSON.parse(payload);
+
+    const token = e.parameter.token;
+
+    if (!isValidWebhookSignature(token)) {
+      Logger.log('Invalid signature');
+      return ContentService.createTextOutput(
+        JSON.stringify({ error: 'Invalid signature' })
+      ).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    Logger.log('Webhook received: ' + JSON.stringify(data));
+
+    return ContentService.createTextOutput(
+      JSON.stringify({ message: 'Webhook received' })
+    ).setMimeType(ContentService.MimeType.JSON);
+  } catch (error) {
+    Logger.log('Error: ' + error);
+    return ContentService.createTextOutput(
+      JSON.stringify({ error: 'Error: ' + error })
+    ).setMimeType(ContentService.MimeType.JSON);
+  }
 }

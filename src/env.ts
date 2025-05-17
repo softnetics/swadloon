@@ -22,5 +22,6 @@ export function getEnv(): Record<string, string> {
     WORKSPACE_SLUG: scriptProperties.getProperty('WORKSPACE_SLUG') || '',
     PROJECT_ID: scriptProperties.getProperty('PROJECT_ID') || '',
     RECIPIENT_EMAIL: scriptProperties.getProperty('RECIPIENT_EMAIL') || '',
+    WEBHOOK_SECRET: scriptProperties.getProperty('WEBHOOK_SECRET') || '',
   };
 }
