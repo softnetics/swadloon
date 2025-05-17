@@ -1,3 +1,5 @@
+import { createIntakeIssue } from './utils/plane';
+
 /**
  * Copyright 2023 Google LLC
  *
@@ -13,7 +15,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { hello } from './example-module';
+function onFormSubmit(e: GoogleAppsScript.Events.FormsOnFormSubmit) {
+  const formResponse = e.response;
 
-console.log(hello());
+  const itemResponses = formResponse.getItemResponses();
+
+  const payload = itemResponses.reduce(
+    (
+      acc: { [key: string]: string | string[] | string[][] },
+      curItemResponse: GoogleAppsScript.Forms.ItemResponse
+    ) => {
+      const item = curItemResponse.getItem();
+      const itemTitle = item.getTitle();
+      const response = curItemResponse.getResponse();
+
+      acc[itemTitle] = response;
+
+      return acc;
+    },
+    {}
+  );
+
+  Logger.log('Form response payload:' + JSON.stringify(payload));
+
+  const response = createIntakeIssue(payload);
+  Logger.log('Response from Plane API: ' + response);
+}
