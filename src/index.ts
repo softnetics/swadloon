@@ -1,3 +1,4 @@
+import { getEnv } from './env';
 import { updateStatus } from './utils/form';
 import { createIntakeIssue, isValidWebhookSignature } from './utils/plane';
 
@@ -60,6 +61,7 @@ function doGet(e: GoogleAppsScript.Events.DoGet) {
 
 function doPost(e: GoogleAppsScript.Events.DoPost) {
   try {
+    const { PROJECT_ID } = getEnv();
     const payload = e.postData.contents;
     const data = JSON.parse(payload);
 
@@ -74,7 +76,11 @@ function doPost(e: GoogleAppsScript.Events.DoPost) {
 
     Logger.log('Webhook received: ' + JSON.stringify(data));
 
-    if (data.event === 'issue' && data.action === 'updated') {
+    if (
+      data.event === 'issue' &&
+      data.action === 'updated' &&
+      data.data.project === PROJECT_ID
+    ) {
       updateStatus(data.data.name, data.data.state.name);
     }
 
